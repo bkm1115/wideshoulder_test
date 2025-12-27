@@ -44,10 +44,13 @@ except Exception as e:  # pragma: no cover - import/runtime dependency issue
 
 try:
     import mediapipe.solutions as mp_solutions
-    mp_pose = mp_solutions.pose
-    mp_face_detection = mp_solutions.face_detection
-except Exception as e:  # pragma: no cover - import/runtime dependency issue
-    raise RuntimeError(f"Failed to import mediapipe solutions: {type(e).__name__}: {e}") from e
+except Exception:
+    try:
+        import mediapipe.python.solutions as mp_solutions  # fallback for some builds
+    except Exception as e:
+        raise RuntimeError(f"Failed to import mediapipe solutions: {type(e).__name__}: {e}") from e
+mp_pose = mp_solutions.pose
+mp_face_detection = mp_solutions.face_detection
 
 _pose_detector = None
 _face_detector = None
