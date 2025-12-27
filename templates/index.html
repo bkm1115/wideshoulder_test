@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>어좁이 테스트 | 모바일 퍼스트</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="logo">💪 <span id="logoText">어좁이 테스트</span></div>
+      <button class="btn-ghost btn-small" id="langBtn" type="button">🌐 EN</button>
+    </header>
+
+    <section class="hero">
+      <h1 id="heroTitle">어좁이 테스트</h1>
+      <p id="heroSub">얼굴 폭 대비 어깨 폭 비율(S/H ratio)로 내 어깨 타입을 장난스럽게 측정</p>
+      <div class="badges">
+        <span class="badge" id="badgeAI">🧠 AI 분석</span>
+        <span class="badge" id="badgePrivacy">🔒 데이터 저장 X</span>
+        <span class="badge" id="badgeSpeed">⚡ 빠른 결과</span>
+      </div>
+    </section>
+
+    <div id="shareArea">
+      <section class="card">
+        <div class="upload-head">
+          <div>
+            <h3 id="uploadTitle" style="margin:0;">사진 업로드</h3>
+            <div class="muted" id="uploadHelper" style="font-size:14px;">정면 1장 · 한 명만 · 어깨와 얼굴 모두 프레임 안</div>
+          </div>
+        </div>
+        <div class="mosaic-toggle">
+          <button class="btn-ghost btn-small" id="mosaicOn" type="button">얼굴 모자이크 0</button>
+          <button class="btn-ghost btn-small active" id="mosaicOff" type="button">얼굴 모자이크 X</button>
+        </div>
+        <div id="viewer" class="viewer">
+          <div class="placeholder" id="viewerPlaceholder">
+            <div style="font-size:30px;">📷</div>
+            <div id="viewerPlaceholderText">이미지를 탭하거나 끌어놓기</div>
+          </div>
+        </div>
+        <input type="file" id="fileInput" accept="image/png,image/jpeg" style="display:none;" />
+        <div class="status" id="statusText">사진을 선택하면 미리보기 후, 결과가 바로 위 영역에 표시됩니다.</div>
+      </section>
+
+      <section class="card">
+        <div class="result-meta">
+          <div class="nick-line">
+            <span id="stickerL" class="sticker" aria-hidden="true">💪</span>
+            <p id="nickBadge" class="result-title muted" data-has-result="">별명 대기중</p>
+            <span id="stickerR" class="sticker" aria-hidden="true">💪</span>
+          </div>
+          <div id="percentChip" class="pill" data-has-result="">상위/하위 퍼센트</div>
+          <p id="quipText" class="quip muted" data-has-quip="">한줄평은 분석 후 표시됩니다.</p>
+        </div>
+        <div class="stats" id="stats"></div>
+      </section>
+    </div>
+
+    <div class="actions">
+      <button id="shareBtn" class="btn-share" type="button">공유하기</button>
+      <button id="retryBtn" type="button">다른 사진으로 시도하기</button>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
