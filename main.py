@@ -63,8 +63,8 @@ def get_pose_detector():
         try:
             _pose_detector = mp_pose.Pose(
                 static_image_mode=True,
-                model_complexity=2,
-                min_detection_confidence=0.5,
+                model_complexity=1,
+                min_detection_confidence=0.4,
             )
         except Exception as e:
             raise RuntimeError(f"Failed to init Pose(): {type(e).__name__}: {e}") from e
@@ -78,7 +78,7 @@ def get_face_detector():
         try:
             _face_detector = mp_face_detection.FaceDetection(
                 model_selection=1,
-                min_detection_confidence=0.5,
+                min_detection_confidence=0.4,
             )
         except Exception as e:
             raise RuntimeError(f"Failed to init FaceDetection(): {type(e).__name__}: {e}") from e
@@ -89,6 +89,15 @@ def _decode_image(file_bytes: bytes) -> np.ndarray:
     image_array = np.frombuffer(file_bytes, np.uint8)
     image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
     return image
+
+
+def _maybe_resize(image_bgr: np.ndarray, max_side: int = 1600) -> np.ndarray:
+    h, w = image_bgr.shape[:2]
+    scale = max(h, w) / max_side
+    if scale <= 1:
+        return image_bgr
+    new_w, new_h = int(w / scale), int(h / scale)
+    return cv2.resize(image_bgr, (new_w, new_h), interpolation=cv2.INTER_AREA)
 
 
 def _extract_pose(image_rgb: np.ndarray, width: int, height: int):
@@ -183,7 +192,7 @@ def _build_overlay(
         if w > 0 and h > 0:
             roi = annotated[y : y + h, x : x + w]
             if roi.size > 0:
-                small = cv2.resize(roi, (max(1, w // 15), max(1, h // 15)), interpolation=cv2.INTER_LINEAR)
+                small = cv2.resize(roi, (max(1, w // 40), max(1, h // 40)), interpolation=cv2.INTER_LINEAR)
                 mosaic_roi = cv2.resize(small, (w, h), interpolation=cv2.INTER_NEAREST)
                 annotated[y : y + h, x : x + w] = mosaic_roi
 
@@ -313,6 +322,7 @@ async def analyze_image(file: UploadFile = File(...), mosaic: bool = Form(False)
     if image_bgr is None:
         raise HTTPException(status_code=400, detail="Invalid image file")
 
+    image_bgr = _maybe_resize(image_bgr, max_side=1600)
     height, width = image_bgr.shape[:2]
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
 
