@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import importlib
+import sys
 
 
 app = FastAPI(title="Shoulder & Face Validator", version="0.1.0")
@@ -38,24 +38,43 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 try:
-    mp_pose = importlib.import_module("mediapipe.solutions.pose")
-    mp_face_detection = importlib.import_module("mediapipe.solutions.face_detection")
-except ImportError as exc:  # pragma: no cover - runtime dependency issue
-    raise RuntimeError(
-        "mediapipe.solutions.* 모듈을 불러올 수 없습니다. "
-        "시스템 라이브러리(libgl 등)가 없을 수 있으니 apt.txt를 확인하세요. "
-        f"원인: {exc}"
-    )
+    import mediapipe as mp
+    mp_pose = mp.solutions.pose
+    mp_face_detection = mp.solutions.face_detection
+except Exception as e:  # pragma: no cover - import/runtime dependency issue
+    raise RuntimeError(f"Failed to import mediapipe: {type(e).__name__}: {e}") from e
 
-pose_detector = mp_pose.Pose(
-    static_image_mode=True,
-    model_complexity=2,
-    min_detection_confidence=0.5,
-)
-face_detector = mp_face_detection.FaceDetection(
-    model_selection=1,
-    min_detection_confidence=0.5,
-)
+_pose_detector = None
+_face_detector = None
+
+
+def get_pose_detector():
+    """Lazily initialize Pose detector to avoid startup crash on limited environments."""
+    global _pose_detector
+    if _pose_detector is None:
+        try:
+            _pose_detector = mp_pose.Pose(
+                static_image_mode=True,
+                model_complexity=2,
+                min_detection_confidence=0.5,
+            )
+        except Exception as e:
+            raise RuntimeError(f"Failed to init Pose(): {type(e).__name__}: {e}") from e
+    return _pose_detector
+
+
+def get_face_detector():
+    """Lazily initialize FaceDetection to avoid startup crash on limited environments."""
+    global _face_detector
+    if _face_detector is None:
+        try:
+            _face_detector = mp_face_detection.FaceDetection(
+                model_selection=1,
+                min_detection_confidence=0.5,
+            )
+        except Exception as e:
+            raise RuntimeError(f"Failed to init FaceDetection(): {type(e).__name__}: {e}") from e
+    return _face_detector
 
 
 def _decode_image(file_bytes: bytes) -> np.ndarray:
@@ -65,7 +84,7 @@ def _decode_image(file_bytes: bytes) -> np.ndarray:
 
 
 def _extract_pose(image_rgb: np.ndarray, width: int, height: int):
-    pose_results = pose_detector.process(image_rgb)
+    pose_results = get_pose_detector().process(image_rgb)
     if not pose_results.pose_landmarks:
         return None
 
@@ -90,7 +109,7 @@ def _extract_pose(image_rgb: np.ndarray, width: int, height: int):
 
 
 def _extract_face_bbox(image_rgb: np.ndarray, width: int, height: int):
-    face_results = face_detector.process(image_rgb)
+    face_results = get_face_detector().process(image_rgb)
     if not face_results.detections:
         return None
 
@@ -335,3 +354,12 @@ async def analyze_image(file: UploadFile = File(...), mosaic: bool = Form(False)
 @app.get("/")
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.get("/debug/mediapipe")
+def debug_mediapipe():
+    """배포 환경에서 mediapipe, Python 버전 확인용."""
+    return {
+        "mediapipe_version": getattr(mp, "__version__", "unknown"),
+        "python_version": sys.version,
+    }
