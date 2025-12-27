@@ -40,9 +40,11 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 try:
     mp_pose = importlib.import_module("mediapipe.solutions.pose")
     mp_face_detection = importlib.import_module("mediapipe.solutions.face_detection")
-except ImportError:
-    mp_pose = importlib.import_module("mediapipe.python.solutions.pose")
-    mp_face_detection = importlib.import_module("mediapipe.python.solutions.face_detection")
+except ImportError as exc:
+    raise RuntimeError(
+        "mediapipe.solutions.* 모듈을 불러올 수 없습니다. "
+        "requirements.txt에 mediapipe가 포함되어 있고, 다시 설치/배포했는지 확인하세요."
+    ) from exc
 
 pose_detector = mp_pose.Pose(
     static_image_mode=True,
