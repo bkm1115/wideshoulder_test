@@ -87,6 +87,8 @@ const shareArea = document.getElementById('shareArea');
 const stickerL = document.getElementById('stickerL');
 const stickerR = document.getElementById('stickerR');
 const loaderId = 'viewerLoader';
+const pageLoader = document.getElementById('pageLoader');
+const pageLoaderText = document.getElementById('pageLoaderText');
 
 let selectedFile = null;
 
@@ -352,6 +354,12 @@ function updateMosaicButtons() {
 function setLoading(loading) {
   isLoading = !!loading;
   viewer.classList.toggle('loading', loading);
+  if (pageLoader) {
+    pageLoader.classList.toggle('show', loading);
+    if (pageLoaderText) {
+      pageLoaderText.textContent = translations[currentLang].analyzing || 'Loading...';
+    }
+  }
   if (loading) {
     removeLoader();
     const overlay = document.createElement('div');

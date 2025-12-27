@@ -152,8 +152,25 @@ body {
   font-weight: 700;
   color: var(--text);
 }
+.spinner.small {
+  width: 28px;
+  height: 28px;
+  border-width: 3px;
+}
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+.page-loader {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--text);
+  font-weight: 700;
+}
+.page-loader.show {
+  display: flex;
 }
 .placeholder {
   text-align: center;
