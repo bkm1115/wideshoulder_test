@@ -2,7 +2,7 @@ const translations = {
   ko: {
     logo: '어좁이 테스트',
     heroTitle: '어좁이 테스트',
-    heroSub: '얼굴 폭 대비 어깨 폭 비율(S/H ratio)로 내 넓이를 측정',
+    heroSub: '얼굴 폭 대비 어깨 폭 비율(S/H ratio)로 내 어깨 넓이를 측정',
     badgeAI: '🧠 AI 분석',
     badgePrivacy: '🔒 데이터 저장 X',
     badgeSpeed: '⚡ 빠른 결과',
