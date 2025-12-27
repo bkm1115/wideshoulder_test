@@ -3,6 +3,6 @@ uvicorn[standard]
 gunicorn
 numpy
 opencv-python-headless
-mediapipe==0.10.31
+mediapipe==0.10.7
 python-multipart
 jinja2
