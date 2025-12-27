@@ -39,10 +39,15 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 try:
     import mediapipe as mp
-    mp_pose = mp.solutions.pose
-    mp_face_detection = mp.solutions.face_detection
 except Exception as e:  # pragma: no cover - import/runtime dependency issue
     raise RuntimeError(f"Failed to import mediapipe: {type(e).__name__}: {e}") from e
+
+try:
+    import mediapipe.solutions as mp_solutions
+    mp_pose = mp_solutions.pose
+    mp_face_detection = mp_solutions.face_detection
+except Exception as e:  # pragma: no cover - import/runtime dependency issue
+    raise RuntimeError(f"Failed to import mediapipe solutions: {type(e).__name__}: {e}") from e
 
 _pose_detector = None
 _face_detector = None
