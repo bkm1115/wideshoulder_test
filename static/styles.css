@@ -97,6 +97,32 @@ body {
   box-shadow: var(--shadow);
   padding: 14px 16px;
 }
+.intro-card {
+  display: grid;
+  gap: 6px;
+}
+.intro-title {
+  margin: 0;
+  font-size: 18px;
+}
+.intro-desc {
+  margin: 0;
+  line-height: 1.5;
+}
+.intro-steps-title {
+  margin: 0;
+  font-size: 14px;
+}
+.step-list {
+  margin: 0 0 0 18px;
+  padding: 0;
+  color: var(--muted);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.step-list li {
+  margin-bottom: 4px;
+}
 .card h3 { margin: 0 0 6px; }
 .muted { color: var(--muted); }
 .upload-head {

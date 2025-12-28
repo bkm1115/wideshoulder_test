@@ -6,6 +6,8 @@ from typing import Dict, Optional
 
 import cv2
 import numpy as np
+from datetime import datetime
+
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
@@ -372,6 +374,39 @@ async def analyze_image(file: UploadFile = File(...), mosaic: bool = Form(False)
 @app.get("/")
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.get("/robots.txt")
+def robots(request: Request):
+    base_url = f"{request.url.scheme}://{request.url.netloc}"
+    content = "\n".join(
+        [
+            "User-agent: *",
+            "Allow: /",
+            f"Sitemap: {base_url}/sitemap.xml",
+        ]
+    )
+    return Response(content=content, media_type="text/plain")
+
+
+@app.get("/sitemap.xml")
+def sitemap(request: Request):
+    base_url = f"{request.url.scheme}://{request.url.netloc}"
+    lastmod = datetime.utcnow().date().isoformat()
+    content = "\n".join(
+        [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+            "  <url>",
+            f"    <loc>{base_url}/</loc>",
+            f"    <lastmod>{lastmod}</lastmod>",
+            "    <changefreq>weekly</changefreq>",
+            "    <priority>1.0</priority>",
+            "  </url>",
+            "</urlset>",
+        ]
+    )
+    return Response(content=content, media_type="application/xml")
 
 
 @app.get("/debug/mediapipe")

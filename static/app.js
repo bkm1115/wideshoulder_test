@@ -3,6 +3,12 @@ const translations = {
     logo: '어좁이 테스트',
     heroTitle: '어좁이 테스트',
     heroSub: '얼굴 폭 대비 어깨 폭 비율(S/H ratio)로 내 어깨 넓이를 측정',
+    introTitle: '어깨 넓이 테스트 소개',
+    introDesc: '어좁이 테스트는 얼굴 폭 대비 어깨 폭 비율(S/H ratio)을 계산해 어깨 넓이를 빠르게 확인하는 도구입니다. 남자 어깨 비율을 포함한 다양한 어깨 넓이를 재미로 체크할 수 있어요.',
+    introStepsTitle: '사용 방법',
+    introStep1: '정면 사진 1장을 업로드',
+    introStep2: '얼굴과 어깨가 모두 보이도록 프레임에 맞추기',
+    introStep3: '측정된 S/H ratio와 퍼센트를 확인',
     badgeAI: '🧠 AI 분석',
     badgePrivacy: '🔒 데이터 저장 X',
     badgeSpeed: '⚡ 빠른 결과',
@@ -31,6 +37,12 @@ const translations = {
     logo: 'Shoulder Ratio Test',
     heroTitle: 'Shoulder Ratio Test',
     heroSub: 'Check your shoulder type with the S/H ratio, just for fun.',
+    introTitle: 'About the Shoulder Width Test',
+    introDesc: 'The Shoulder Ratio Test estimates shoulder width by comparing shoulder width to face width (S/H ratio). It is a quick, fun way to check shoulder proportions.',
+    introStepsTitle: 'How it works',
+    introStep1: 'Upload one front-facing photo',
+    introStep2: 'Keep your face and shoulders fully in frame',
+    introStep3: 'Review your S/H ratio and percentile',
     badgeAI: '🧠 AI Analysis',
     badgePrivacy: '🔒 No data saved',
     badgeSpeed: '⚡ Quick result',
@@ -72,6 +84,12 @@ const logoText = document.getElementById('logoText');
 const langBtn = document.getElementById('langBtn');
 const heroTitle = document.getElementById('heroTitle');
 const heroSub = document.getElementById('heroSub');
+const introTitle = document.getElementById('introTitle');
+const introDesc = document.getElementById('introDesc');
+const introStepsTitle = document.getElementById('introStepsTitle');
+const introStep1 = document.getElementById('introStep1');
+const introStep2 = document.getElementById('introStep2');
+const introStep3 = document.getElementById('introStep3');
 const badgeAI = document.getElementById('badgeAI');
 const badgePrivacy = document.getElementById('badgePrivacy');
 const badgeSpeed = document.getElementById('badgeSpeed');
@@ -387,6 +405,12 @@ function setLanguage(lang) {
   logoText.textContent = t.logo;
   heroTitle.textContent = t.heroTitle;
   heroSub.textContent = t.heroSub;
+  if (introTitle) introTitle.textContent = t.introTitle;
+  if (introDesc) introDesc.textContent = t.introDesc;
+  if (introStepsTitle) introStepsTitle.textContent = t.introStepsTitle;
+  if (introStep1) introStep1.textContent = t.introStep1;
+  if (introStep2) introStep2.textContent = t.introStep2;
+  if (introStep3) introStep3.textContent = t.introStep3;
   badgeAI.textContent = t.badgeAI;
   badgePrivacy.textContent = t.badgePrivacy;
   badgeSpeed.textContent = t.badgeSpeed;
